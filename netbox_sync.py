@@ -13,6 +13,8 @@ class NetBox:
             token=token
         )
 
+        self.nb.http_session.verify = False
+
         self.nb_objects = {
             "tags": {
                 "path": "extras.tags",
