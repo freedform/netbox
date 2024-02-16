@@ -1,6 +1,9 @@
 import operator
 import pynetbox
 import re
+import requests
+
+requests.packages.urllib3.disable_warnings()
 
 
 class NetBox:
@@ -254,6 +257,15 @@ class NetBox:
                 "lookup_fields": [
                     "address",
                 ],
+            },
+            "prefixes": {
+                "path": "ipam.prefixes",
+                "required_fields": [
+                    "prefix",
+                ],
+                "lookup_fields": [
+                    "prefix",
+                ],
             }
         }
 
@@ -265,7 +277,7 @@ class NetBox:
     def nb_slug(raw_name):
         raw_name = raw_name.lower()
         raw_name = re.sub(r'[^\w\s-]', '', raw_name)
-        raw_name = re.sub(r'[\s_]+', '-', raw_name)
+        raw_name = re.sub(r'[\s-]+', '-', raw_name)
         raw_name = raw_name.strip('-')
         return raw_name
 
@@ -321,7 +333,7 @@ class NetBox:
         if site_tenant:
             raw_data["tenant"] = self.get_nb_id("tenants", {"name": site_tenant})
         return raw_data
-    
+
     def location_normalization(self, raw_data):
         location_parent = raw_data.get("parent")
         if location_parent:
@@ -333,7 +345,7 @@ class NetBox:
         if location_tenant:
             raw_data["tenant"] = self.get_nb_id("tenants", {"name": location_tenant})
         return raw_data
-    
+
     def rack_normalization(self, raw_data):
         rack_location = raw_data.get("location")
         if rack_location:
@@ -368,7 +380,7 @@ class NetBox:
         object_id = raw_data.get("object_id")
         content_type = raw_data.get("content_type")
         if object_id and content_type:
-            raw_data["object_id"] = self.get_nb_id(f"{content_type.split('.')[-1]}s", {"name": object_id}) ####!!!!!
+            raw_data["object_id"] = self.get_nb_id(f"{content_type.split('.')[-1]}s", {"name": object_id})  # !!!!!
         return raw_data
 
     def platform_normalization(self, raw_data):
@@ -575,3 +587,7 @@ class NetBox:
 
     def delete_object(self, object_path, object_data):
         pass
+
+    def filter_object(self, object_name, lookup_clause):
+        object_path = self.nb_objects[object_name]["path"]
+        return operator.attrgetter(object_path)(self.nb).filter(**lookup_clause)
