@@ -538,6 +538,8 @@ class NetBox:
                 })
             self.interface_ip_list = []
 
+        return nb_object
+
     def get_nb_id(self, object_name, lookup_clause):
         cache_key = "__".join([f"{x}={y}" for x, y in lookup_clause.items()])
         cache_value = self.nb_id_cache[object_name].get(cache_key)
