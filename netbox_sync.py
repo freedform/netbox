@@ -1,9 +1,6 @@
 import operator
 import pynetbox
 import re
-import requests
-
-requests.packages.urllib3.disable_warnings()
 
 
 class NetBox:
@@ -215,7 +212,7 @@ class NetBox:
                 "path": "dcim.devices",
                 "required_fields": [
                     "name",
-                    "role",
+                    "device_role",
                     "device_type",
                     "site"
                 ],
@@ -274,6 +271,7 @@ class NetBox:
         self.nb_id_cache = {x: {} for x in self.nb_objects.keys()}
 
         self.interface_ip_list = []
+        self.skip_update_ip = False
 
     @staticmethod
     def nb_slug(raw_name):
@@ -404,9 +402,9 @@ class NetBox:
         return raw_data
 
     def device_normalization(self, raw_data):
-        device_role = raw_data.get("role")
+        device_role = raw_data.get("device_role")
         if device_role:
-            raw_data["role"] = self.get_nb_id("device_roles", {"name": device_role})
+            raw_data["device_role"] = self.get_nb_id("device_roles", {"name": device_role})
         device_type = raw_data.get("device_type")
         if device_type:
             raw_data["device_type"] = self.get_nb_id("device_types", {"model": device_type})
@@ -517,25 +515,32 @@ class NetBox:
                 lookup_clause[lookup_field] = object_data[lookup_field]
         return lookup_clause
 
-    def create_update_object(self, object_name, object_data):
+    def create_update_object(self, object_name, object_data, skip_if_exist=False):
         normal_data = self.normalization(object_name, object_data)
         lookup_clause = self.lookup(object_name, normal_data)
         nb_object = self.get_object(object_name, lookup_clause)
+
         if nb_object:
+            if skip_if_exist:
+                print(f"SKIPPING UPDATE {object_name}, {object_data=}, reason: {skip_if_exist=}")
             nb_object.update(normal_data)
             nb_object.save()
-            print(f"UPDATE {normal_data}")
+            print(f"UPDATE: {object_name}, {normal_data}")
         else:
             nb_object = self.create_object(object_name, normal_data)
-            print(f"CREATE {normal_data}")
+            print(f"CREATE: {object_name}, {normal_data}")
 
         if object_name == "interfaces" and self.interface_ip_list:
             for ip_address in self.interface_ip_list:
-                self.create_update_object("ip_addresses", {
-                    "address": ip_address,
-                    "assigned_object_type": "dcim.interface",
-                    "assigned_object_id": nb_object.id
-                })
+                self.create_update_object(
+                    object_name="ip_addresses",
+                    object_data={
+                        "address": ip_address,
+                        "assigned_object_type": "dcim.interface",
+                        "assigned_object_id": nb_object.id
+                    },
+                    skip_if_exist=self.skip_update_ip,
+                )
             self.interface_ip_list = []
 
         return nb_object
