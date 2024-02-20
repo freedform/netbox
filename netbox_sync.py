@@ -537,7 +537,7 @@ class NetBox:
                     object_data={
                         "address": ip_address,
                         "assigned_object_type": "dcim.interface",
-                        "assigned_object_id": nb_object.id
+                        "assigned_object_id": nb_object.id,
                     },
                     skip_if_exist=self.skip_update_ip,
                 )

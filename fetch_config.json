@@ -1,0 +1,143 @@
+{
+    "tags": {
+        "name": "",
+        "description": "",
+        "color": ""
+    },
+    "regions": {
+        "name": "",
+        "description": "",
+        "parent": "name",
+        "tags": ["name"]
+    },
+    "rirs": {
+        "name": "",
+        "description": "",
+        "tags": ["name"]
+    },
+    "tenant_groups": {
+        "name": "",
+        "description": "",
+        "parent": "name",
+        "tags": ["name"]
+    },
+    "tenants": {
+        "name": "",
+        "description": "",
+        "group": "name",
+        "tags": ["name"]
+    },
+    "asns": {
+        "asn": "",
+        "rir": "name",
+        "tenant": "name",
+        "tags": ["name"]
+    },
+    "site_groups": {
+        "name": "",
+        "description": "",
+        "parent": "name",
+        "tags": ["name"]
+    },
+    "sites": {
+        "name": "",
+        "description": "",
+        "facility": "",
+        "region": "name",
+        "group": "name",
+        "tenant": "name",
+        "asns": ["asn"],
+        "tags": ["name"]
+    },
+    "locations": {
+        "name": "",
+        "description": "",
+        "parent": "name",
+        "site": "name",
+        "group": "name",
+        "tenant": "name",
+        "tags": ["name"]
+    },
+    "racks": {
+        "name": "",
+        "description": "",
+        "facility_id": "",
+        "serial": "",
+        "location": "name",
+        "site": "name",
+        "tenant": "name",
+        "type": "value",
+        "width": "value",
+        "u_height": "",
+        "starting_unit": "",
+        "tags": ["name"]
+    },
+    "contact_roles": {
+        "name": "",
+        "description": "",
+        "tags": ["name"]
+    },
+    "contact_groups": {
+        "name": "",
+        "description": "",
+        "parent": "name",
+        "tags": ["name"]
+    },
+    "contacts": {
+        "name": "",
+        "description": "",
+        "title": "",
+        "phone": "",
+        "email": "",
+        "address": "",
+        "group": "name",
+        "tags": ["name"]
+    },
+    "contact_assignments": {
+        "content_type": "",
+        "object": "name",
+        "contact": "name",
+        "role": "name",
+        "tags": ["name"]
+    },
+    "device_roles": {
+        "name": "",
+        "description": "",
+        "color": "",
+        "tags": ["name"]
+    },
+    "manufacturers": {
+        "name": "",
+        "description": "",
+        "tags": ["name"]
+    },
+    "platforms": {
+        "name": "",
+        "description": "",
+        "manufacturer": "name",
+        "tags": ["name"]
+    },
+    "device_types": {
+        "model": "",
+        "description": "",
+        "manufacturer": "name",
+        "part_number": "",
+        "u_height": "",
+        "is_full_depth": "",
+        "tags": ["name"]
+    },
+    "devices": {
+        "name": "",
+        "description": "",
+        "role": "name",
+        "device_type": "model",
+        "platform": "name",
+        "site": "name",
+        "location": "name",
+        "tenant": "name",
+        "rack": "name",
+        "position": "",
+        "face": "value",
+        "primary_ip4": "address"
+    }
+}
